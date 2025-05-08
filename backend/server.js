@@ -2,20 +2,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import {connectDB} from './config/db.js';
+import ProdutRoute from './routes/product.route.js';
 
 const app = express();
 dotenv.config();
 
-app.get("/products", (req, res) => {
-    res.send("Server is ready");
-});
+const PORT = process.env.PORT || 5000;
 
-console.log(process.env.MONGO_URI);
+app.use(express.json());
 
-app.listen(5000, () => {
+app.use("/api/products", ProdutRoute);
+
+app.listen(PORT, () => {
     connectDB();
     console.log("MongoDB connected");
-    console.log("Server started at http://localhost:5000");
+    console.log("Server started at http://localhost:"+PORT);
 });
 
 //BROiE3qniiz0TMrC
