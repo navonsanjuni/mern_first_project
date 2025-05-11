@@ -1,73 +1,88 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  Container,
-  Input,
-  Stack,
-  Typography,
-  Paper,
-} from '@mui/material';
+import React, { useState } from "react";
+import { Button, Container, TextField, Typography, Box } from "@mui/material";
+import { useProductStore } from '../store/product';
+import { useToast } from '../hooks/useToast'; 
 
 const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
-    name: '',
-    price: '',
-    image: '',
+    name: "",
+    price: 0,
+    image: "",
   });
 
-  const handleAddProduct = () => {
-    console.log('Product added:', newProduct);
+  const { showToast, ToastComponent } = useToast(); 
+  const { createProduct } = useProductStore();
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    const { success, message } = await createProduct(newProduct);
+
+    if (!success) {
+      showToast(message, 'error'); 
+    } else {
+      showToast(message, 'success'); 
+      setNewProduct({ name: '', price: '', image: '' });
+    }
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 6 }}>
-      <Stack spacing={4}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Create New Product
-        </Typography>
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" component="h1" align="center" gutterBottom>
+        Create New Product
+      </Typography>
 
-        <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
-          <Stack spacing={3}>
-            <Input
-              placeholder="Product Name"
-              value={newProduct.name}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-              fullWidth
-            />
-            <Input
-              placeholder="Product Price"
-              value={newProduct.price}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, price: e.target.value })
-              }
-              fullWidth
-            />
-            <Input
-              placeholder="Product Image URL"
-              value={newProduct.image}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, image: e.target.value })
-              }
-              fullWidth
-            />
-            <Button
+      <Box
+        component="form"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          p: 3,
+          borderRadius: 2,
+          boxShadow: 3,
+        }}
+      >
+        <TextField
+          label="Product Name"
+          variant="outlined"
+          name="name"
+          value={newProduct.name}
+          onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+          fullWidth
+        />
+        <TextField
+          label="Product Price"
+          variant="outlined"
+          name="price"
+          type="number"
+          value={newProduct.price}
+          onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+          fullWidth
+        />
+        <TextField
+          label="Product Image URL"
+          variant="outlined"
+          name="image"
+          value={newProduct.image}
+          onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value })}
+          fullWidth
+        />
+         <Button
               variant="contained"
               fullWidth
               onClick={handleAddProduct}
               sx={{
-                backgroundColor: "#40cbc9", 
-                "&:hover": {
-                  backgroundColor: "#35b3a9", 
+                backgroundColor: '#40cbc9',
+                '&:hover': {
+                  backgroundColor: '#35b3a9',
                 },
               }}
             >
               Add Product
             </Button>
-          </Stack>
-        </Paper>
-      </Stack>
+      </Box>
+
+      <ToastComponent />
     </Container>
   );
 };
