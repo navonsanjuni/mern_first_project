@@ -5,7 +5,7 @@ export const useToast = () => {
   const [toast, setToast] = useState({
     open: false,
     message: '',
-    severity: 'success', // 'success' | 'error' | 'info' | 'warning'
+    severity: 'success', 
   });
 
   const showToast = (message, severity = 'success') => {
