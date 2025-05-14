@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import NavBar from "./components/NavBar";
+import NavBar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
 import CreatePage from "./pages/CreatePage";
 
-function App() {
+const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleMode = () => {
@@ -22,11 +24,16 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline /> 
-      <NavBar isDarkMode={isDarkMode} toggleMode={toggleMode} />
-      <CreatePage />
+      <CssBaseline />
+      <Router>
+        <NavBar isDarkMode={isDarkMode} toggleMode={toggleMode} />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/create" element={<CreatePage />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
-}
+};
 
 export default App;
